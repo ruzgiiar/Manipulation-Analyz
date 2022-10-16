@@ -111,12 +111,9 @@ df["post_date"] = df["post_date"].str.strip()
 
 def half_counts(val):
     if val == val:
-        if "former" in val:
-            val = re.sub("\(former\)", "", val)
-
-        elif "Posted6" in val:
+        if "Posted6" in val:
             if "(" in val:
-                val = re.sub("\(Posted6\)","Posted 6", val )
+                val = re.sub("\(Posted6\)","Posted 6", val)
             else:
                 val = re.sub("Posted6", "Posted 6", val)
 
@@ -287,7 +284,7 @@ def half_counts(val):
                 val = re.sub("\(Employer30\)", "Employer 30", val)
             else:
                 val = re.sub("Employer30", "Employer 30", val)
-            
+
 
         else:
             val == val
@@ -298,7 +295,10 @@ def half_counts(val):
 
 
 
+
+
 df["new_post_date"] = df["post_date"].apply(half_counts)
+df["post_date"] = df["post_date"].str.strip()
 
 
 result = df["new_post_date"].value_counts()[0:50]
@@ -376,10 +376,7 @@ result = df["post_situation"].value_counts()[0:50]
 
 def situation_half(val):
     if val == val:
-        if "former" in val:
-            val = re.sub("\(former\)", "", val)
-
-        elif "PostedPosted" in val:
+        if "PostedPosted" in val:
             if "(" in val:
                 val = re.sub("\(PostedPosted\)", "Posted", val)
             else:
@@ -422,6 +419,7 @@ df["post_situation"] = df["post_situation"].str.strip()
 result = df["post_situation"].value_counts()[0:50]
 
 
+
 result = df[["post_date" ,"post_situation","post_spread_time"]].head(50)
 
 ## karışık post_date değişkenini düzenleyip new_post_date adında yeni bir kolona yazdırdık. Sonra new_post_date kolonunuda 2 ayrı kolona ayırdık.
@@ -459,10 +457,7 @@ result = df["job_salary"].value_counts()[0:50]
 
 def half_counts(val):
     if val == val:
-        if "former" in val:
-            val = re.sub("\(former\)", "", val)
-        
-        elif "year" in val:
+        if "year" in val:
             if "(" in val:
                 val = re.sub("\(year\)", "yeer", val)
             else:
@@ -485,6 +480,7 @@ def half_counts(val):
 df["new_job_salary"] = df["job_salary"].apply(half_counts)
 df["new_job_salary"] = df["new_job_salary"].str.strip()
 result = df["new_job_salary"].head(50)
+
 
         
 # ₹ para birimini ve boşlukları " ", tüm "new_job_salary" kolonundan sildik.
@@ -582,9 +578,7 @@ def change_paid(val):
 df["payment_schedule"] = df["payment_schedule"].apply(change_paid)
 df["payment_schedule"] = df["payment_schedule"].str.strip()
 
-result20 = df["payment_schedule"].head(50)
-
-print(result20)
+result = df["payment_schedule"].head(50)
 
 result = df.columns
 
