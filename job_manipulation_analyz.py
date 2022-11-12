@@ -8,69 +8,64 @@ import missingno as msno
 import re
 
 
-
 df = pd.read_csv("c:/Users/ruzga/Desktop/Veri Bilimi/Python/pandas/job_dataset.csv")
-# print(df.to_string())
-
 
 # df.info()
 
-# Veri setinde 1583 gözlem ve 8 adet değişken vardır.
-#(Satır => 1583)
-#(Sütun => 8)
+# There are 1583 observations and 8 in the data set. (Veri setinde 1583 gözlem ve 8 adet değişken vardır.)
 
-# Sadece job_salary değişkeninde kayıt değer bulunmaktadır.
+#(Row (Satır) => 1583)
+#(Column (Sütun) => 8)
 
-# Değişkenlerin hepsi (8 adet) object veri tipine sahiptir.
+# Except for job_salary, the other columns do not have null values. (job_salary haricinde diğer kolonlarda kayıp gözlem yoktur.)
+    # 1178 Null value. (1178 boş değer.)
 
-# Fikir elde etmek için ilk 5 ve son 5 kayıta bakalım.
+# All columns have object data type. (Değişkenlerin hepsi object veri tipine sahiptir.)
+
+# Let's look at the top 5 and last 5 records to get an idea. (Fikir elde etmek için ilk 5 ve son 5 kayıta bakalım.)
 
 result = df.head()
 result1 = df.tail()
 
-# Sütun yani değişken isimleri açıklayıcı ve net bir şekilde yazılmış
 
-# Kayıp verilerin bulunduğu job_salary kolonu işaretlenmiş.
+# Column names are descriptive and clearly written. (Sütun adları açıklayıcı ve net bir şekilde yazılmıştır.)
 
-# Metin düzgün, typo hatası olmadan yazılmış olarak görülüyor.
+# The text looks fine with no typos. (Metin, yazım hatası olmadan düzgün görünüyor.)
 
-# job_salary değişkeninde bulunan değerlerin hem string hem float değerler olduğunu görebiliyoruz. Ayrıca minimum ve maxsimum değerlere sahip gözlemlerde var. 
+# We can see that the values in the job_salary variable are both string and float values. There are also observations with minimum and maximum values. (Job_salary değişkenindeki değerlerin hem string hem de float değerler olduğunu görebiliriz. Minimum ve maksimum değerlere sahip gözlemler de vardır.)
 
 
-# Yapısal düzenin kontrolü için
+# For layout control. (Düzen kontrolü için.)
 
 result = df.iloc[:20, :2]
 result1 = df.iloc[:20, 2:4]
 result2 = df.iloc[:20, 4:6]
 result3 = df.iloc[:20 ,6:8]
 
-result = df[["job_location","post_date","job_salary"]][0:20]
-
+# We checked 20 observations in columns of 2. (2'lik sütunlarda 20 gözlemi kontrol ettik.)
 
 """
-
 "post_date" değişkeni 2 aynı sütuna bölünecek.
 "job_salary" değişkeni düzenlenecek.
 "today" değişkeni string'den integer'a dönüşecek.
 "job_location" değişkenine bir göz atılacak.
-
 """
 
-result = df.dtypes
 
+# 1- For "post_date" ("post_date" için)
 
-
-
-# 1- "post_date" için:
-
+# We will look at the first 20 lines for "post_date". ("post_date" için ilk 20 satıra bakacağız.)
 result = df["post_date"].head(20)
-# result = df["post_date"].nunique()
 
-# print(df["post_date_conditions"].dtype)
 
-# result = df[df.post_date.str.contains("days ago")]["post_date"]
+# Let's see how many similar observations there are. (Benzer kaç adet gözlem olduğuna bakacağız.)
+result = df["post_date"].nunique() # There are 80 identical observations. (80 adet aynı gözlem bulunmaktadır.)
 
-# # sadece 1415 kayıtta days ago geçiyor.
+
+result = df[df.post_date.str.contains("days ago")]["post_date"]
+print(result)
+
+#sadece 1415 kayıtta days ago geçiyor.
 
 # result = len(df[df.post_date.str.contains("day ago")]["post_date"])
 
@@ -111,12 +106,9 @@ df["post_date"] = df["post_date"].str.strip()
 
 def half_counts(val):
     if val == val:
-        if "former" in val:
-            val = re.sub("\(former\)", "", val)
-
-        elif "Posted6" in val:
+        if "Posted6" in val:
             if "(" in val:
-                val = re.sub("\(Posted6\)","Posted 6", val )
+                val = re.sub("\(Posted6\)","Posted 6", val)
             else:
                 val = re.sub("Posted6", "Posted 6", val)
 
@@ -287,7 +279,7 @@ def half_counts(val):
                 val = re.sub("\(Employer30\)", "Employer 30", val)
             else:
                 val = re.sub("Employer30", "Employer 30", val)
-            
+
 
         else:
             val == val
@@ -298,7 +290,10 @@ def half_counts(val):
 
 
 
+
+
 df["new_post_date"] = df["post_date"].apply(half_counts)
+df["post_date"] = df["post_date"].str.strip()
 
 
 result = df["new_post_date"].value_counts()[0:50]
@@ -376,10 +371,7 @@ result = df["post_situation"].value_counts()[0:50]
 
 def situation_half(val):
     if val == val:
-        if "former" in val:
-            val = re.sub("\(former\)", "", val)
-
-        elif "PostedPosted" in val:
+        if "PostedPosted" in val:
             if "(" in val:
                 val = re.sub("\(PostedPosted\)", "Posted", val)
             else:
@@ -422,6 +414,7 @@ df["post_situation"] = df["post_situation"].str.strip()
 result = df["post_situation"].value_counts()[0:50]
 
 
+
 result = df[["post_date" ,"post_situation","post_spread_time"]].head(50)
 
 ## karışık post_date değişkenini düzenleyip new_post_date adında yeni bir kolona yazdırdık. Sonra new_post_date kolonunuda 2 ayrı kolona ayırdık.
@@ -459,10 +452,7 @@ result = df["job_salary"].value_counts()[0:50]
 
 def half_counts(val):
     if val == val:
-        if "former" in val:
-            val = re.sub("\(former\)", "", val)
-        
-        elif "year" in val:
+        if "year" in val:
             if "(" in val:
                 val = re.sub("\(year\)", "yeer", val)
             else:
@@ -485,6 +475,7 @@ def half_counts(val):
 df["new_job_salary"] = df["job_salary"].apply(half_counts)
 df["new_job_salary"] = df["new_job_salary"].str.strip()
 result = df["new_job_salary"].head(50)
+
 
         
 # ₹ para birimini ve boşlukları " ", tüm "new_job_salary" kolonundan sildik.
@@ -582,9 +573,7 @@ def change_paid(val):
 df["payment_schedule"] = df["payment_schedule"].apply(change_paid)
 df["payment_schedule"] = df["payment_schedule"].str.strip()
 
-result20 = df["payment_schedule"].head(50)
-
-print(result20)
+result = df["payment_schedule"].head(50)
 
 result = df.columns
 
