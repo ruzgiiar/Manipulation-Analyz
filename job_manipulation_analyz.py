@@ -27,6 +27,9 @@ df = pd.read_csv("c:/Users/ruzga/Desktop/Veri Bilimi/Python/pandas/job_dataset.c
 result = df.head()
 result1 = df.tail()
 
+# print(result)
+# print(result1)
+
 
 # Column names are descriptive and clearly written. (Sütun adları açıklayıcı ve net bir şekilde yazılmıştır.)
 
@@ -42,6 +45,12 @@ result1 = df.iloc[:20, 2:4]
 result2 = df.iloc[:20, 4:6]
 result3 = df.iloc[:20 ,6:8]
 
+# print(result)
+# print(result1)
+# print(result2)
+# print(result3)
+
+
 # We checked 20 observations in columns of 2. (2'lik sütunlarda 20 gözlemi kontrol ettik.)
 
 """
@@ -56,44 +65,49 @@ result3 = df.iloc[:20 ,6:8]
 
 # We will look at the first 20 lines for "post_date". ("post_date" için ilk 20 satıra bakacağız.)
 result = df["post_date"].head(20)
+# print(result)
 
 
 # Let's see how many similar observations there are. (Benzer kaç adet gözlem olduğuna bakacağız.)
 result = df["post_date"].nunique() # There are 80 identical observations. (80 adet aynı gözlem bulunmaktadır.)
+# print(result)
 
 
-result = df[df.post_date.str.contains("days ago")]["post_date"]
-print(result)
-
-#sadece 1415 kayıtta days ago geçiyor.
-
-# result = len(df[df.post_date.str.contains("day ago")]["post_date"])
-
-# 31 kayıtta da day ago geçiyor.
-# 1446 kayıtta geçenleri bulduk. ("days ago", "day ago")
+# We looked at how many observations were in "days ago". (Kaç gözlemde "days ago" geçiyor diye baktık.)
+result = df[df.post_date.str.contains("days ago")]["post_date"] # It is mentioned in "days ago" in 1415 observations. (1415 gözlemde "days ago" geçiyor.)
+# print(result)
 
 
-result = df.columns # kolon isimlerine bakmak için
-
-# df["post_date_days"] = df["post_date"].str.split(" ").str[1]
-# result = df["post_date_days"]
-
-# result = df["post_date_days"].nunique()
-
-# result = df[df.post_date.str.contains("posted")]["post_date"]
-# result = df[df.post_date_days.str.contains("posted")]["post_date_days"]
+# We looked at how many observations were in "day ago". (Kaç gözlemde "day ago" geçiyor diye baktık.)
+result = len(df[df.post_date.str.contains("day ago")]["post_date"]) # It is mentioned in "day ago" in 31 observations. (31 gözlemde "day ago" geçiyor.)
+# print(result)
 
 
-# "post_date" değişkeninden "day ago", "days ago" ve "+" string türündeki verileri silerek "new_post_date" isminde yeni bir değişken oluşturduk
+# "days ago" or "day ago" is mentioned in a total of 1446 observations. (Toplam 1446 gözlemde "sadasdas" veya "asdasdas" geçmektedir.)
 
-# df["new_post_date"] = df.post_date.str.replace("day ago","").str.replace("days ago","").str.replace("+","")
-# df["new_post_date"] = df["new_post_date"].str.strip()
-# result = df["new_post_date"]
+# Let's look at the column names. (Sütun isimlerine bakacağız.)
+# result = df.columns
 
-df["post_date"] = df.post_date.str.replace("day ago","").str.replace("days ago","").str.replace("+","")
-df["post_date"] = df["post_date"].str.strip()
+# We separate the "post_date" column from the space and assign the first index to the new column we created with the name "post_date_days". ("post_date" kolonunu boşluktak itibaren ayırıp, 1. indexini "post_date_days" ismiyle oluşturduğumuz yeni kolona atıyoruz.)
+df["post_date_days"] = df["post_date"].str.split(" ").str[1]
+result = df["post_date_days"].head() # We got the indexes showing how many days ago it was. (Kaç gün önce olduğunu belirten indexleri aldık.)
+# print(result)
 
-# result = df["new_post_date"].nunique()
+# We will look at how many similar observations are in the newly created column. (Yeni oluşturulan kolonda benzer kaç adet gözlem olduğuna bakacağız.)
+result = df["post_date_days"].nunique() # There are 34 identical observations. (34 adet aynı gözlem bulunmaktadır.)
+# print(result)
+
+
+#We deleted the string data "day ago", "days ago" and "+" from the "post_date" variable and created a new variable called "new_post_date". ("post_date" değişkeninden "day ago", "days ago" ve "+" string türündeki verileri silerek "new_post_date" isminde yeni bir değişken oluşturduk.)
+df["new_post_date"] = df.post_date.str.replace("day ago","").str.replace("days ago","").str.replace("+","")
+df["new_post_date"] = df["new_post_date"].str.strip()
+result = df["new_post_date"]
+# print(result)
+
+
+
+result = df["new_post_date"].nunique()
+# print(result)
 
 
 # df["new_post_date"] = df["new_post_date"].str.split()
@@ -101,6 +115,9 @@ df["post_date"] = df["post_date"].str.strip()
 
 # result = df["new_post_date"].value_counts()[0:50]
 # result1 = df["new_post_date"].value_counts()[50:100]
+
+print(result)
+print(result1)
 
 ## def fonksiyonu ile Posted30, Posted6 gibi verileri ayrı kolonlarda yazmak için Posted 30 ve Posted 6 şeklinde düzeltiyoruz.
 
