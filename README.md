@@ -16,6 +16,6 @@
 
    - Statistical analyzes in detail
 
-   - 1086 used lines of code
+   - English and Turkish explanations
 
 For more detailed explanation contact ' ruzgiarr@gmail.com '.
