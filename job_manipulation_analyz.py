@@ -125,12 +125,9 @@ result1 = df["new_post_date"].value_counts()[50:100]
 
 def half_counts(val):
     if val == val:
-        if "former" in val:
-            val = re.sub("\(former\)", "", val)
-
-        elif "Posted6" in val:
+        if "Posted6" in val:
             if "(" in val:
-                val = re.sub("\(Posted6\)","Posted 6", val )
+                val = re.sub("\(Posted6\)","Posted 6", val)
             else:
                 val = re.sub("Posted6", "Posted 6", val)
 
@@ -301,7 +298,7 @@ def half_counts(val):
                 val = re.sub("\(Employer30\)", "Employer 30", val)
             else:
                 val = re.sub("Employer30", "Employer 30", val)
-            
+
 
         else:
             val == val
@@ -312,7 +309,10 @@ def half_counts(val):
 
 
 
+
+
 df["new_post_date"] = df["post_date"].apply(half_counts)
+df["new_post_date"] = df["new_post_date"].str.strip()
 
 
 result = df["new_post_date"].value_counts()[0:50]
@@ -403,10 +403,7 @@ result = df["post_situation"].value_counts()[0:50]
 # We created a def function to fix the "PostedPosted", "EmployeeActive", "PostedToday" and "PostedJust" observations. ("PostedPosted", "EmployeeActive", "PostedToday" ve "PostedJust" gözlemlerini düzeltmek için bir def fonksiyonu oluşturduk.)
 def situation_half(val):
     if val == val:
-        if "former" in val:
-            val = re.sub("\(former\)", "", val)
-
-        elif "PostedPosted" in val:
+        if "PostedPosted" in val:
             if "(" in val:
                 val = re.sub("\(PostedPosted\)", "Posted", val)
             else:
@@ -450,7 +447,7 @@ df["post_situation"] = df["post_situation"].str.strip()
 result = df["post_situation"].value_counts()[0:50]
 # print(result)
 
-
+# We saw what our operations changed by separating the "post_date" variable and printing the "post_situation" and "post_spread_time" variables that we created together. ("post_date" değişkenini ayırarak oluşturduğumuz "post_situation" ve "post_spread_time" değişkenlerini birlikte yazdırarak yaptığımız işlemlerin neler değiştirdiğini gördük.)
 result = df[["post_date" ,"post_situation","post_spread_time"]].head(50)
 # print(result)
 
@@ -502,10 +499,7 @@ result = df["job_salary"].value_counts()[0:50]
 # With the def function, we replace "year" with "yeer" and "an" with "a". For more convenient separation. (def fonksiyonu ile "year"olan yerleri "yeer" ve "an" olan yerleri "a" ile değiştirdik. Daha rahat ayırmak için.)
 def half_counts(val):
     if val == val:
-        if "former" in val:
-            val = re.sub("\(former\)", "", val)
-        
-        elif "year" in val:
+        if "year" in val:
             if "(" in val:
                 val = re.sub("\(year\)", "yeer", val)
             else:
@@ -532,7 +526,7 @@ result = df["new_job_salary"].head(50)
 # print(result)
 
         
-# ₹ para birimini ve boşlukları " ", tüm "new_job_salary" kolonundan sildik.
+# "We deleted the "₹" currency and spaces in the "new_job_salary" column. (new_job_salary" kolonundan "₹" para birimini ve boşlukları sildik.)
 df["new_job_salary"] = df.new_job_salary.str.replace("₹", "").str.replace(" ", "")
 result = df["new_job_salary"].head(50)
 # print(result)
@@ -628,13 +622,6 @@ df["payment_schedule"] = df["payment_schedule"].apply(change_paid)
 df["payment_schedule"] = df["payment_schedule"].str.strip()
 result = df["payment_schedule"].head(50)
 print(result)
-
-result20 = df["payment_schedule"].head(50)
-
-print(result20)
-
-result = df.columns
-
 
 
 ## Son olarak veri setimizin daha düzenli görülmesi için, "post_date", "job_salary" gibi işlem yaptığımız kolonları ve işlemlerin tamamlanması
