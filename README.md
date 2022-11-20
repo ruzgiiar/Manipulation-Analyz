@@ -19,3 +19,9 @@
    - English and Turkish explanations
 
 For more detailed explanation contact ' ruzgiarr@gmail.com '.
+
+[My Repositories](https://https://github.com/ruzgiiar?tab=repositories)
+
+[Linkedin Profil](https://https://www.linkedin.com/in/r%C3%BCzgar-yi%C4%9Fit-a217ab243/)
+
+[Glassdor Profil](https://https://www.glassdoor.com/member/profile/index.htm)
