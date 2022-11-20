@@ -93,8 +93,8 @@ df["post_date_days"] = df["post_date"].str.split(" ").str[1]
 result = df["post_date_days"].head() # We got the indexes showing how many days ago it was. (Kaç gün önce olduğunu belirten indexleri aldık.)
 # print(result)
 
-# We will look at how many similar observations are in the newly created column. (Yeni oluşturulan kolonda benzer kaç adet gözlem olduğuna bakacağız.)
-result = df["post_date_days"].nunique() # There are 34 identical observations. (34 adet aynı gözlem bulunmaktadır.)
+# We will look at how many non-repeating observations are in the newly created column. (Yeni oluşturulan sütunda kaç tane tekrarlanmayan gözlem olduğuna bakacağız.)
+result = df["post_date_days"].nunique() # There are 34 unrepeatable observations. (34 adet tekrarlanmayan gözlem bulunmaktadır.)
 # print(result)
 
 
@@ -105,21 +105,23 @@ result = df["new_post_date"]
 # print(result)
 
 
-
-result = df["new_post_date"].nunique()
+# We looked at how many unique observations there are in the "new_post_date" variable. ("new_post_date" değişkeninde kaç adet benzersiz gözlem olduğuna baktık.)
+result = df["new_post_date"].nunique() # TThere are 79 unrepeatable observations. (79 adet tekrarlanmayan gözlem bulunmaktadır.)
 # print(result)
 
+# We split the observations in "new_post_date" with a space. ("new_post_date" değişkenindeki her bir gözlemi boşluktan itibaren böldük.)
+df["new_post_date"] = df["new_post_date"].str.split()
+result = df["new_post_date"].head(50)
+# print(result)
 
-# df["new_post_date"] = df["new_post_date"].str.split()
-# result = df["new_post_date"].head(50)
+# We found 79 different but repetitive observations. (79 adet birbirinden farklı fakat kendi içerisinde tekrar eden gözlemleri buluyoruz.)
+result = df["new_post_date"].value_counts()[0:50]
+result1 = df["new_post_date"].value_counts()[50:100]
+# print(result)
+# print(result1)
 
-# result = df["new_post_date"].value_counts()[0:50]
-# result1 = df["new_post_date"].value_counts()[50:100]
 
-print(result)
-print(result1)
-
-## def fonksiyonu ile Posted30, Posted6 gibi verileri ayrı kolonlarda yazmak için Posted 30 ve Posted 6 şeklinde düzeltiyoruz.
+# By creating a def function, we separate the processed data such as "Posted30" and "Posted6" into separate columns by fixing them as "Posted 30" and "Posted 6". (def fonksiyonu oluşturarak "Posted30" ve "Posted6" gibi işlenmiş verileri, ayrı sütunlara bölmek için "Posted 30" ve "Posted 6" şeklinde düzeltiyoruz.)
 
 def half_counts(val):
     if val == val:
@@ -310,82 +312,95 @@ def half_counts(val):
 
 
 df["new_post_date"] = df["post_date"].apply(half_counts)
-df["post_date"] = df["post_date"].str.strip()
+df["new_post_date"] = df["new_post_date"].str.strip()
 
 
 result = df["new_post_date"].value_counts()[0:50]
 result1 = df["new_post_date"].value_counts()[50:100]
+# print(result)
+# print(result1)
 
 
 
-
-
-
-
-# # "new_post_date" kolonunu 2 farklı kolona ayırdık. ("post_situation" işe alım durumu, "post_spread_time" yayınlanma tarihi)
+# We split the "new_post_date" column into 2 different columns. ("post_situation" recruitment status, "post_spread_time" publication date.) [("new_post_date" kolonunu 2 farklı kolona ayırdık. ("post_situation" işe alım durumu, "post_spread_time" yayınlanma tarihi.)]
 
 df["post_situation"] = df["new_post_date"].str.split(" ").str[0]
 df["post_spread_time"] = df["new_post_date"].str.split(" ").str[1]
 
-# ## oluşturulan kolonlar için başta ve sondaki boşluk karakterlerini sildik. ve yukarıda replace metodu ile değiştirdiğimiz "" konlonlarınıda sildik.
+# We deleted the leading and trailing space characters for the generated columns. (Oluşturulan kolonlar için başta ve sondaki boşluk karakterlerini sildik.)
 df["post_situation"] = df["post_situation"].str.strip()
 df["post_spread_time"] = df["post_spread_time"].str.strip()
-
 result = df[["post_situation","post_spread_time"]].head(10)
+# print(result)
 
+# The sum of the observations with empty elements was checked for the 2 different columns created. (Oluşturulan 2 farklı kolon için boş elemanlı gözlemlerin toplamı kontrol edildi.)
+result = df[["post_situation","post_spread_time"]].isnull().sum() # 0 empty observations in the "post_situation" variable, 89 blank observations in the "post_spread_time" variable. ("post_situation" değişkeninde 0 boş gözlem, "post_spread_time" değişkeninde 89 boş gözlem.)
+# print(result)
 
-# # # Oluşturulan 2 kolon için boş eleman sayılarının toplamına bakıldı.
-result = df[["post_situation","post_spread_time"]].isnull().sum()
-result = df["post_spread_time"].nunique()
+## For "post_spread_time". ("post_spread_time" için.)
+# We looked at how many different observations there are in the "post_spread_time" variable. ("post_spread_time" değişkeninde kaç farklı gözlem olduğuna baktık.)
+result = df["post_spread_time"].nunique() # There are 33 different observations. (33 adet farklı gözlem bulunmaktadır.)
+# print(result)
 
-# # # "post_spread_time" değişkeninden "posted" ve "ongoing" değerleri silindi.
+# Removed "posted" and "in progress" values from the "post_spread_time" variable. ("post_spread_time" değişkeninden "posted" ve "ongoing" değerleri silindi.)
 df["post_spread_time"] = df.post_spread_time.str.replace("posted", "").str.replace("ongoing", "")
+# result = df.info() # There are 89 empty observations for "post_spread_time". ("post_spread_time" için 89 adet boş gözlem var.)
+# print(result)
 
-# # Baştaki ve sondaki boşluk karakterlerini sildik
+# We deleted the leading and trailing whitespace characters and printed the first 40 observations. (Baştaki ve sondaki boşluk karakterlerini sildik ve ilk 40 gözlemi yazdırdık.)
 df["post_spread_time"] = df["post_spread_time"].str.strip()
 result = df["post_spread_time"].head(40)
+# print(result)
 
-# # "posted" ve "ongoing" değerlerinin silinmesiyle boş kalan dizilere np.nan yani NaN atadık.
+
+# We deleted the "submitted" and "in progress" values and assigned "np.nan", that is, "NaN", to the blank observations. ("posted" ve "ongoing" değerlerinin silinmesiyle boş kalan gözlemlere "np.nan" yani "NaN" atadık.)
 df["post_spread_time"] = df["post_spread_time"].replace("", np.nan)
 result = df["post_spread_time"].head(50)
+# print(result)
 
 
-
-# # # kolon için farklı elemanlara bakıldı ve 32 'den 31 adet birbirinden farklı veri kaldığı gözlemlendi.
+# Different elements were examined for the column and it was observed that 31 different data from 32 remained. (Kolon için farklı elemanlara bakıldı ve 32 'den 31 adet birbirinden farklı veri kaldığı gözlemlendi.)
 result = df["post_spread_time"].nunique()
+# print(result)
 
 
-
-# # # str-int dönüşümü için boş değerleri 99999 sayısı ile doldurduk.
+# For str-int we filled in the blanks with "99999". (str-int dönüşümü için boş değerleri "99999" sayısı ile doldurduk.)
 df["post_spread_time"] = df["post_spread_time"].replace(np.nan, 99999)
 
-# # bütün kolonların bilgilerine baktık ve hazılardığımız kolonda 504 tane dolu veri varken şimdi boş veri kalmamış.
-# result = df.info()
-result = df["post_spread_time"].head(50)
+# We changed the observations that read "30+" to "30". ("30+" yazan gözlemleri "30" olarak değiştirdik.)
+df["post_spread_time"] = df["post_spread_time"].replace("30+",30)
 
 
-# # Dönüşüm işlemi tamamlandı.
-df["post_spread_time"] = df["post_spread_time"].astype("int")
+# => We looked at all the column information and the "post_spread_time" column has 89 blank data and no more blank data. (Bütün kolon bilgilerine baktık ve "post_spread_time" kolonunda 89 tane boş veri varken şimdi boş veri kalmamış.)
+# df.info()
+
+
+# After editing we changed the structure of "post_spread_time" variable from "str" to "int64". (Düzenlemelerden sonra "post_spread_time" değişkeninin yapısını "str"yerine "int64" olara değiştirdik.)
+df["post_spread_time"] = df["post_spread_time"].astype("int64")
 df["post_spread_time"].dtypes
 result = df["post_spread_time"].head(50)
+# print(result)
 
 
-
-# # Dönüşüm işlemi bittikden sonra 99999 atadığımız değerleri tekrar np.nan moduna geçiriyoruz.
+# After the transformation, we change the observations that we changed to 99999 to np.nan again. (Dönüşüm işleminden sonra 99999 olarak değiştirdiğimiz gözlemleri tekrar np.nan olarak değiştiriyoruz.)
 df["post_spread_time"] = df["post_spread_time"].replace(99999, np.nan)
 result = df["post_spread_time"].head(50)
-result = df["post_spread_time"].isnull().sum()
+# print(result)
+# df.info()
 
-# result = df.info()
+    ## For "post_situation". ("post_situation" için.) ##
+# We look at how many different values are in the "After status" column. ("post_situation" kolonunda kaç farkl değer var ona bakıyoruz.)
+result = df["post_situation"].nunique() # There are 7 different observations. (7 adet farklı gözlem var.)
+# print(result)
 
-
-# # kolonda kaç farkl değer var ona bakıyoruz.
-result = df["post_situation"].head(50)
-result = df["post_situation"].nunique()
-
-# # ilk 50 değerde kaç farklı veri var ona bakıcaz
+# We will look at how many different observations there are in the first 50 values. (İlk 50 değerde kaç farklı gözlem var ona bakacağız.)
 result = df["post_situation"].value_counts()[0:50]
+# print(result)
 
+# => The problem is the observations "PostedPosted", "EmployeeActive", "PostedToday" and "PostedJust". (Sorun olan "PostedPosted", "EmployerActive", "PostedToday" ve "PostedJust" gözlemleri bulunmaktadır.)
+
+
+# We created a def function to fix the "PostedPosted", "EmployeeActive", "PostedToday" and "PostedJust" observations. ("PostedPosted", "EmployeeActive", "PostedToday" ve "PostedJust" gözlemlerini düzeltmek için bir def fonksiyonu oluşturduk.)
 def situation_half(val):
     if val == val:
         if "PostedPosted" in val:
@@ -426,47 +441,62 @@ def situation_half(val):
 
     return val
 
+# We defined the function we created to the "post_situation" variable and got its output. (Oluşturduğumuz fonksiyonu "post_situation" değişkenine tanımladık ve yazdırdık.)
 df["post_situation"] = df["post_situation"].apply(situation_half)
 df["post_situation"] = df["post_situation"].str.strip()
 result = df["post_situation"].value_counts()[0:50]
+# print(result)
 
-
-
+# We saw what our operations changed by separating the "post_date" variable and printing the "post_situation" and "post_spread_time" variables that we created together. ("post_date" değişkenini ayırarak oluşturduğumuz "post_situation" ve "post_spread_time" değişkenlerini birlikte yazdırarak yaptığımız işlemlerin neler değiştirdiğini gördük.)
 result = df[["post_date" ,"post_situation","post_spread_time"]].head(50)
+# print(result)
 
-## karışık post_date değişkenini düzenleyip new_post_date adında yeni bir kolona yazdırdık. Sonra new_post_date kolonunuda 2 ayrı kolona ayırdık.
-#   post_situation ve post_spread_time adında. 
-#   ilk olarak post_spread_time kolonunda, string ifadeleri sildik boş değerlere 99999 atadık ve bütün kolonu floata çevirdik. Daha sonrasında bütün 9999 değerleri nan değerler ile değiştirdik.
-#   post_situation kolonunda birleşik yazılmış olan karakterleri ayırdık. Örn PostedPosted yazana yerleri Posted ile değiştirdik.
+# Abstract (Özet) #
+"""
+=> We edited the mixed post_date variable and printed it into a new column called new_post_date. Then we split the new_post_date column into 2 separate columns.
+
+=> Named "post_situation" and "post_spread_time".
+
+=> First we deleted the string expressions in the "post_spread_time" column, assigned null values "99999" and converted the entire column to float. Then we replaced all "99999" values with "NaN" values.
+
+=> In the "post_situation" column we have separated the attached characters. For example, we replaced PostedPosted with Posted.
+
+(=> karışık post_date değişkenini düzenleyip new_post_date adında yeni bir kolona yazdırdık. Sonra new_post_date kolonunuda 2 ayrı     kolona ayırdık.
+
+=> "post_situation" ve "post_spread_time" adında. 
+
+=> ilk olarak "post_spread_time" kolonunda, string ifadeleri sildik boş değerlere "99999" atadık ve bütün kolonu floata çevirdik. Daha sonrasında bütün "99999" değerleri "NaN" değerler ile değiştirdik.
+
+=> "post_situation" kolonunda birleşik yazılmış olan karakterleri ayırdık. Örn PostedPosted yazana yerleri Posted ile değiştirdik.)
+"""
 
 # Şimdi diğer kolonlara bakalım..
-
-# result = df.iloc[:20, :2]
-# result1 = df.iloc[:20, 2:4]
-# result2 = df.iloc[:20, 4:6]
-# result3 = df.iloc[:20 ,6:8]
-
-
-# "today" değişkenini datetime tipine çeviriyoruz.
-df["today"] = pd.to_datetime(df["today"])
-# df.info()
-
 
 result = df.iloc[:20, :2]
 result1 = df.iloc[:20, 2:4]
 result2 = df.iloc[:20, 4:6]
-result3 = df.iloc[:20, 6:8]
-result4 = df.iloc[:20, 8:11]
+result3 = df.iloc[:20 ,6:8]
+result4 = df.iloc[:20 ,8:11]
+# print(result)
+# print(result1)
+# print(result2)
+# print(result3)
+# print(result4)
+
+# We convert the "today" variable to datetime type. ("today" değişkenini datetime tipine çeviriyoruz.)
+df["today"] = pd.to_datetime(df["today"])
+# df.info()
+
 
 ## "job_salary" değişkenine göz atacağız
 
 result = df["job_salary"].head(50)
 result = df["job_salary"].value_counts()[0:50]
+# print(result)
 
+# => For better analysis in "job_ary", we first separate the sections that say "year and month" into a separate column, then create 2 columns "min" and "max" and separate them from each other. ("job_salary" değişkeninde daha rahat istatistiksel analiz yapmak için öncelikle "year" ve "month" yazan yerleri ayrı bir kolona ayırıyoruz, ardından "min" ve "max" şeklinde 2 kolon oluşturup ayırıyoruz.)
 
-## def fonksiyonu ile "year"ı "yeer" ve "an"i "a" olarak değiştirdik. Daha rahat ayırmak için.
-
-
+# With the def function, we replace "year" with "yeer" and "an" with "a". For more convenient separation. (def fonksiyonu ile "year"olan yerleri "yeer" ve "an" olan yerleri "a" ile değiştirdik. Daha rahat ayırmak için.)
 def half_counts(val):
     if val == val:
         if "year" in val:
@@ -489,80 +519,80 @@ def half_counts(val):
 
     return val
 
+# We created a new column named "new_job_salary" with the function we created. (Oluşturduğumuz fonksiyon ile "new_job_salary" adında yeni bir kolon oluşturduk.)
 df["new_job_salary"] = df["job_salary"].apply(half_counts)
 df["new_job_salary"] = df["new_job_salary"].str.strip()
 result = df["new_job_salary"].head(50)
-
+# print(result)
 
         
-# ₹ para birimini ve boşlukları " ", tüm "new_job_salary" kolonundan sildik.
+# "We deleted the "₹" currency and spaces in the "new_job_salary" column. (new_job_salary" kolonundan "₹" para birimini ve boşlukları sildik.)
 df["new_job_salary"] = df.new_job_salary.str.replace("₹", "").str.replace(" ", "")
 result = df["new_job_salary"].head(50)
+# print(result)
 
 
-# kolondaki "a" harflerini boşluk " " ile değiştirdik. Daha rahat split yapabilmek için.
+# We replaced the letters "a" in the "new_job_salary" column with a space " ". For easier splitting. ("new_job_salary" kolonundaki "a" harflerini boşluk " " ile değiştirdik. Daha rahat bölebilmek için.)
 df["new_job_salary"] = df.new_job_salary.str.replace("a", " ")
-result = df["new_job_salary"].head(50)
 df["new_job_salary"] = df["new_job_salary"].str.strip()
+result = df["new_job_salary"].head(50)
+# print(result)
 
 
-# "new_job_salary" kolonunun [0]. indexini df["new_salary_column"] kolonuna atadık.
+# We created and assigned the zeroth string([0]) of the "new_job_salary" column to the "new_salary_column" column. ("new_job_salary" kolonunun, sıfırıncı dizesini([0]) "new_salary_column" kolonu oluşturup oraya atadık.)
 df["new_salary_column"] = df["new_job_salary"].str.split(" ").str[0]
 df["new_salary_column"] = df["new_salary_column"].str.strip()
 result = df["new_salary_column"].head(50)
+# print(result)
 
-# yeni oluşturduğumuz "new_job_salary" kolonunda "-" karakterini boşluk " " ile değiştirdik.
+# In the newly created "new_salary_column" column, we replaced the "-" character with a space. (Yeni oluşturduğumuz "new_salary_column" kolonunda "-" karakterini boşluk ile değiştirdik.)
 df["new_salary_column"] = df.new_salary_column.str.replace("-", " ")
 result = df["new_salary_column"].head(50)
-
-result = df["new_salary_column"].head(50)
-
-result = df["new_salary_column"].value_counts()[:50]
+# print(result)
 
 
-## "new_salary_column"un [0]. indexini oluşturduğumuz "min_salary" kolonuna attık.
+# We put the zero ([0]) index of the "new_salary_column" column in the "min_salary" column we created. ("new_salary_column" kolonunun sıfırıncı ([0]) indexini oluşturduğumuz "min_salary" kolonuna attık.)
 df["min_salary"] = df["new_salary_column"].str.split(" ").str[0]
 df["min_salary"] = df["min_salary"].str.strip()
 result = df["min_salary"].head(50)
+# print(result)
 
-## "new_salary_column"'un [1]. indexini oluşturduğumuz "max_salary" kolonuna attık.
+
+# We put the first ([1]) index of the "new_salary_column" column in the "max_salary" column we created. ("new_salary_column" kolonunun birinci ([1]) indexini oluşturduğumuz "max_salary" kolonuna attık.)
 df["max_salary"] = df["new_salary_column"].str.split(" ").str[1]
 df["max_salary"] = df["max_salary"].str.strip()
 result = df["max_salary"].head(50)
-
-result = df[["job_title", "min_salary", "max_salary"]].head(50)
-
-result = df["min_salary"].head(50)
+# print(result)
 
 
+# We check if there is a problem with the columns we created. (Oluşturduğumuz kolonlarda sorun var mı diye kontrol ediyoruz.)
+result = df[["min_salary", "max_salary"]].head(50) # The ","'s need to be deleted. ("," lerin silinmesi gerekiyor.)
+# print(result)
 
-## "min_salary" değişkenindeki "," leri sildik "" daha sonrasında object olan veri tipini float'a çevirdik.
+
+# We deleted "," the in the "min_salary" variable and then converted the object data type to float.("min_salary" değişkenindeki "," işareti sildik daha sonrasında object olan veri tipini float'a çevirdik.)
 df["min_salary"] = df.min_salary.str.replace(",", "")
-
 df["min_salary"] = df["min_salary"].astype("float")
 result = df["min_salary"].head(50)
+# print(result)
 
 
-## "max_salary" değişkenindeki "," leri sildik "" daha sonrasında object olan veri tipini float'a çevirdik.
+# We deleted "," the in the "max_salary" variable and then converted the object data type to float.("max_salary" değişkenindeki "," işareti sildik daha sonrasında object olan veri tipini float'a çevirdik.)
 df["max_salary"] = df.max_salary.str.replace(",", "")
-
 df["max_salary"] = df["max_salary"].astype("float")
 result = df["max_salary"].head(50)
+# print(result)
 
 
 
-
-
-# "new_job_salary"de zaman bildiren indexleri "payment_schedule" kolonunu oluşturup içine attık.
+# We created the "payment_schedule" column in "new_job_salary" and added the timed indexes. ("new_job_salary"de zaman bildiren indexleri "payment_schedule" kolonunu oluşturup içine attık.)
 df["payment_schedule"] = df["new_job_salary"].str.split(" ").str[1]
 df["payment_schedule"] = df["payment_schedule"].str.strip()
-result = df["payment_schedule"].head(50)
-
-result = df["payment_schedule"].value_counts()[:50]
-
+result = df["payment_schedule"].value_counts()[:50] # "yeer" 242, "month" 160, "hour" 3
+# print(result)
 
 
-# def fonkisyonu ile "yeer" olan yerleri "Yearly", "month" olan yerleri "Monthly" ve "hour" olan yerleri "Hourly" olarak değiştirdik.
+# With the def function, we changed "yeer" observations to "Yearly", "month" observations to "Monthly" and "hour" to "Hourly". (def fonkisyonu ile "yeer" olan gözlemleri "Yearly", "month" olan gözlemleri "Monthly" ve "hour" olan gözlemleri "Hourly" olarak değiştirdik.)
 def change_paid(val):
     if val == val:
         if "yeer" in val:
@@ -587,13 +617,11 @@ def change_paid(val):
 
     return val
 
+
 df["payment_schedule"] = df["payment_schedule"].apply(change_paid)
 df["payment_schedule"] = df["payment_schedule"].str.strip()
-
 result = df["payment_schedule"].head(50)
-
-result = df.columns
-
+print(result)
 
 
 ## Son olarak veri setimizin daha düzenli görülmesi için, "post_date", "job_salary" gibi işlem yaptığımız kolonları ve işlemlerin tamamlanması
